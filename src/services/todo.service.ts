@@ -1,18 +1,39 @@
-export const addTodo = async (todo: any) => {
-  return 'mock todo create'
+import { ITodo, Todo } from '../entity/todo.entity'
+import { DeleteResult, getRepository } from 'typeorm'
+
+export const addTodo = async (todo: ITodo): Promise<Todo> => {
+  const repo = await getRepository(Todo)
+  const newTodo = await repo.create(todo)
+
+  return repo.save(newTodo)
 }
-export const getAllTodos = async () => {
-  return ['mock todo 1', 'mock todo 2']
+export const getAllTodos = async (): Promise<Todo[]> => {
+  const repo = await getRepository(Todo)
+
+  return repo.find()
 }
-export const getSingleTodo = async (id: number) => {
-  return 'mock todo get'
+export const getSingleTodo = async (id: number): Promise<Todo> => {
+  const repo = await getRepository(Todo)
+
+  return repo.findOne({ where: { id: id } })
 }
-export const putTodo = async (id: number, todo: any) => {
-  return 'mock todo put'
+
+export const putTodo = async (id: number, todo: ITodo): Promise<Todo> => {
+  const repo = await getRepository(Todo)
+  await repo.update(id, todo)
+
+  return repo.findOne(id)
 }
-export const patchTodo = async (id: number, todo: any) => {
-  return 'mock todo patch'
+
+export const patchTodo = async (id: number, todo: ITodo): Promise<Todo> => {
+  const repo = await getRepository(Todo)
+  await repo.update(id, todo)
+
+  return repo.findOne(id)
 }
-export const deleteTodo = async (id: number) => {
-  return 'mock todo delete'
+
+export const deleteTodo = async (id: number): Promise<DeleteResult> => {
+  const repo = await getRepository(Todo)
+
+  return repo.delete(id)
 }

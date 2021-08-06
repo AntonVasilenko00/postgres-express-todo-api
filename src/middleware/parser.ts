@@ -1,3 +1,4 @@
 import * as bodyParser from 'body-parser'
 
-export default bodyParser.urlencoded({ extended: false })
+export const parser = bodyParser.urlencoded({ extended: false })
+export const jsonParser = bodyParser.json()
