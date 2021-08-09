@@ -5,7 +5,7 @@ import {
   postValidation,
   putValidation,
 } from '../../middleware/validation/todos.validation'
-import { validateRequest } from '../../middleware/validation/requestValidation'
+import { validateRequest } from '../../middleware/validation/request.validation'
 
 const todosRouter = express.Router()
 

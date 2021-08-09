@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
-import jwt from 'jsonwebtoken'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm'
+import * as bcrypt from 'bcrypt'
 export interface IUser {
   email: string
-  encryptedPassword?: boolean
+  password: string
 }
 
 @Entity()
@@ -10,22 +10,17 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
-  name: string
-
-  @Column({ nullable: false })
+  @Column({ unique: true })
   email: string
 
-  @Column({ nullable: false })
-  encrypted_password: string
+  @Column()
+  password: string
 
-  @Column({ default: false })
-  isCompleted: boolean
-
-  generateJWT() {
-    return jwt.sign({
-      email: this.email,
-      id: this.id,
-    })
+  @BeforeInsert()
+  private async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10)
   }
+
+  public isValidPassword = async (password: string): Promise<boolean> =>
+    await bcrypt.compare(password, this.password)
 }

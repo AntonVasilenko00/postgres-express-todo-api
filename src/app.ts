@@ -1,19 +1,12 @@
 import * as express from 'express'
 import config from './config/config'
-import logger from './middleware/logger'
-import { parser, jsonParser } from './middleware/parser'
-import rootRouter from './routes/root.routes'
 import connect from './db/connect'
-import * as passport from 'passport'
+import rootRouter from './routes/root.routes'
+import { applyMiddleware } from './middleware'
 
 const app = express()
+applyMiddleware(app)
 
-app.use(parser)
-app.use(jsonParser)
-app.use(logger)
-
-// app.use(passport.initialize())
-// app.use(passport.session())
 app.use('/api', rootRouter)
 app.use((req: express.Request, res: express.Response) =>
   res.status(404).send({ message: 'route not found' })

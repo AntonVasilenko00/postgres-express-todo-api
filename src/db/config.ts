@@ -1,5 +1,5 @@
-import { Todo } from '../entity/todo.entity'
 import { ConnectionOptions } from 'typeorm'
+import Entities from '../entity/'
 
 export default {
   type: 'postgres',
@@ -8,7 +8,7 @@ export default {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Todo],
+  entities: Entities,
   synchronize: true,
   logging: false,
 } as ConnectionOptions

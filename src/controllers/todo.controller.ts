@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import * as TodoService from '../services/todo.service'
 
+//Todo: create base controller
+
 class TodoController {
   private getIdFromRequest = (req: Request) => Number(req.params.id)
 
