@@ -3,6 +3,7 @@ import config from './config/config'
 import connect from './db/connect'
 import rootRouter from './routes/root.routes'
 import { applyMiddleware } from './middleware'
+import { seedDB } from './db/seed'
 
 const app = express()
 applyMiddleware(app)
@@ -14,6 +15,7 @@ app.use((req: express.Request, res: express.Response) =>
 
 connect
   .then(async (connection) => {
+    await seedDB()
     app.listen(config.port, config.hostname, () =>
       console.log(
         `Server is running on http://${config.hostname}:${config.port}`

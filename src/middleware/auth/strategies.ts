@@ -44,7 +44,7 @@ export const JWTStrategy = new _JWTStrategy(
   },
   async (token, done) => {
     try {
-      return done(null, token.user)
+      return done(null, token)
     } catch (err) {
       done(err)
     }

@@ -7,7 +7,6 @@ import {
   patchEntity,
   putEntity,
 } from './base/base.service'
-import { getRepository } from 'typeorm'
 
 //Basic CRUD by id
 const addUser = addEntity<IUser, User>(User)
@@ -18,11 +17,8 @@ const patchUser = patchEntity<IUser, User>(User)
 const deleteUser = deleteEntity<User>(User)
 
 //Custom
-const getUserByEmail = async (email: string): Promise<User> => {
-  const repo = await getRepository(User)
-
-  return repo.findOne({ where: { email: email } })
-}
+const getUserByEmail = (email: string) =>
+  getSingleEntity<User>(User, { email })(null)
 
 export {
   addUser,

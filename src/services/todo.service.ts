@@ -8,6 +8,7 @@ import {
   putEntity,
 } from './base/base.service'
 
+//Basic CRUD
 const addTodo = addEntity<ITodo, Todo>(Todo)
 const getAllTodos = getAllEntities<Todo>(Todo)
 const getSingleTodo = getSingleEntity<Todo>(Todo)
@@ -15,10 +16,21 @@ const putTodo = putEntity<ITodo, Todo>(Todo)
 const patchTodo = patchEntity<ITodo, Todo>(Todo)
 const deleteTodo = deleteEntity<Todo>(Todo)
 
-export { addTodo, getAllTodos, getSingleTodo, putTodo, patchTodo, deleteTodo }
+//Custom
+const getAllUserTodos = async (userID: number) =>
+  getAllEntities<Todo>(Todo, { userID })()
+
+export {
+  addTodo,
+  getAllTodos,
+  getSingleTodo,
+  putTodo,
+  patchTodo,
+  deleteTodo,
+  getAllUserTodos,
+}
 
 //old (repetitive):
-
 // export const addTodo = async (todo: ITodo): Promise<Todo> => {
 //   const repo = await getRepository(Todo)
 //   const newTodo = await repo.create(todo)

@@ -1,4 +1,5 @@
 import { DeleteResult, EntityTarget, getRepository } from 'typeorm'
+import { where } from 'sequelize'
 
 const addEntity =
   <IEntity, Entity>(entity: EntityTarget<Entity>) =>
@@ -10,19 +11,19 @@ const addEntity =
   }
 
 const getAllEntities =
-  <Entity>(entity: EntityTarget<Entity>) =>
+  <Entity>(entity: EntityTarget<Entity>, condition?: Record<string, unknown>) =>
   async (): Promise<Entity[]> => {
     const repo = await getRepository(entity)
 
-    return repo.find()
+    return repo.find(condition ? { where: condition } : {})
   }
 
 const getSingleEntity =
-  <Entity>(entity: EntityTarget<Entity>) =>
+  <Entity>(entity: EntityTarget<Entity>, condition?: Record<string, unknown>) =>
   async (id: number): Promise<Entity> => {
     const repo = await getRepository(entity)
 
-    return repo.findOne({ where: { id: id } })
+    return repo.findOne({ where: condition ? condition : { id: id } })
   }
 
 const putEntity =

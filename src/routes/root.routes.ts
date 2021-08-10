@@ -2,6 +2,8 @@ import * as express from 'express'
 import routes from './index'
 import { validateRequest } from '../middleware/validation/request.validation'
 import * as passport from 'passport'
+import { authorize, ensureUserIsAuthorOrAdmin } from '../middleware/auth/auth'
+import { UserRole } from '../entity/user.entity'
 
 const rootRouter = express.Router()
 

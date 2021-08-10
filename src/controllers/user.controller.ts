@@ -4,7 +4,7 @@ import * as UserService from '../services/user.service'
 //Todo: create base controller
 
 class UserController {
-  private getIdFromRequest = (req: Request) => Number(req.params.id)
+  private getIdFromRequest = (req: Request) => Number(req.params.userID)
 
   private sendNoIdResponse = (res) =>
     res.status(404).send({ message: 'No item with such id' })
@@ -80,6 +80,7 @@ class UserController {
 
       res.status(200).send({ message: 'deleted successfully' })
     } catch (e) {
+      console.log(e)
       res.status(404).send({ message: "Couldn't delete a User" })
     }
   }

@@ -7,7 +7,7 @@ import {
 } from '../../middleware/validation/todos.validation'
 import { validateRequest } from '../../middleware/validation/request.validation'
 
-const todosRouter = express.Router()
+const todosRouter = express.Router({ mergeParams: true })
 
 todosRouter.get('/', todoController.getAllTodos)
 todosRouter.get('/:id', todoController.getSingleTodo)

@@ -1,7 +1,8 @@
-import { body } from 'express-validator'
+import { body, check } from 'express-validator'
 
 export const postValidation = [
-  body('text').notEmpty().withMessage('Attribute text is required'),
+  check('userID').exists().withMessage('UserID is required'),
+  body('text').exists().withMessage('Attribute text is required'),
   body('isCompleted')
     .isBoolean({ strict: true })
     .optional()
@@ -9,6 +10,7 @@ export const postValidation = [
 ]
 
 export const putValidation = [
+  body('userID').exists().withMessage('Attribute UserID is required'),
   body('text').exists().withMessage('Attribute text is required'),
   body('isCompleted')
     .isBoolean({ strict: true })
