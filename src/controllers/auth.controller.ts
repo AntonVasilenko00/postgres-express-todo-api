@@ -39,7 +39,7 @@ class AuthController {
           const payload: JWTPayload = { sub: user.id, role: user.role }
           const token = jwt.sign(payload, config.jwt_secret)
 
-          return res.json({ token })
+          return res.json({ id: user.id, token })
         })
       } catch (err) {
         return next(err)

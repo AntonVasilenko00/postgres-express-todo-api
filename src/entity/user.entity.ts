@@ -4,6 +4,7 @@ import {
   Column,
   BeforeInsert,
   OneToMany,
+  BeforeUpdate,
 } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 import { Todo } from './todo.entity'
@@ -16,6 +17,7 @@ export enum UserRole {
 export interface IUser {
   email: string
   password: string
+  role?: UserRole
 }
 
 @Entity()
@@ -38,6 +40,7 @@ export class User {
   })
   todos: Todo[]
 
+  @BeforeUpdate()
   @BeforeInsert()
   private async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10)

@@ -14,7 +14,7 @@ app.use((req: express.Request, res: express.Response) =>
 )
 
 connect
-  .then(async (connection) => {
+  .then(async () => {
     await seedDB()
     app.listen(config.port, config.hostname, () =>
       console.log(

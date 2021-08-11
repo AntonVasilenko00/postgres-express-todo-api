@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import * as TodoService from '../services/todo.service'
 import * as UserService from '../services/user.service'
-import { Todo } from '../entity/todo.entity'
 
 //Todo: create base controller
 

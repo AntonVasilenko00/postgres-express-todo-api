@@ -1,5 +1,4 @@
 import { DeleteResult, EntityTarget, getRepository } from 'typeorm'
-import { where } from 'sequelize'
 
 const addEntity =
   <IEntity, Entity>(entity: EntityTarget<Entity>) =>
@@ -31,9 +30,7 @@ const putEntity =
   async (id: number, item: IEntity): Promise<Entity> => {
     const repo = await getRepository(entity)
 
-    await repo.update(id, item)
-
-    return repo.findOne(id)
+    return repo.save({ ...item, id })
   }
 
 const patchEntity =
@@ -41,9 +38,9 @@ const patchEntity =
   async (id: number, item: IEntity): Promise<Entity> => {
     const repo = await getRepository(entity)
 
-    await repo.update(id, item)
+    const patchedEntity = await repo.findOne(id)
 
-    return repo.findOne(id)
+    return repo.save(Object.assign(patchedEntity, item))
   }
 
 const deleteEntity =
