@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import { createConnection } from 'typeorm'
 import connectionConfig from './config'
 

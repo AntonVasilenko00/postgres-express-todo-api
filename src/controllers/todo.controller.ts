@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import * as TodoService from '../services/todo.service'
-import * as UserService from '../services/user.service'
+import UserService from '../services/user.service'
+import TodoService from '../services/todo.service'
+import { Todo } from '../entity/todo.entity'
 
 //Todo: create base controller
 
@@ -13,12 +14,13 @@ class TodoController {
 
   createTodo = async (req: Request, res: Response) => {
     try {
+      await TodoService.initRepo()
       const data = req.body
       const userID = this.getUserIDFromRequest(req)
 
       if (!data.userID && userID) data.userID = userID
 
-      const todo = await TodoService.addTodo(data)
+      const todo = await TodoService.add(data)
 
       res.json(todo)
     } catch (e) {
@@ -28,8 +30,9 @@ class TodoController {
 
   getSingleTodo = async (req: Request, res: Response) => {
     try {
+      await TodoService.initRepo()
       const id = this.getIDFromRequest(req)
-      const todo = await TodoService.getSingleTodo(id)
+      const todo = await TodoService.getSingle(id)
 
       if (!todo) this.sendNoIdResponse(res)
 
@@ -41,14 +44,15 @@ class TodoController {
 
   getAllTodos = async (req: Request, res: Response) => {
     try {
+      await TodoService.initRepo()
       const userID = this.getUserIDFromRequest(req)
 
       if (!userID) {
-        res.json(await TodoService.getAllTodos())
-      } else if (!(await UserService.getSingleUser(userID))) {
+        res.json(await TodoService.getAll())
+      } else if (!(await UserService.getSingle(userID))) {
         res.status(404).send({ message: "Couldn't find user with such id" })
       } else {
-        res.json(await TodoService.getAllUserTodos(userID))
+        res.json(await TodoService.getAllByUserId(userID))
       }
     } catch (e) {
       res.status(404).send({ message: "Couldn't get todos" })
@@ -57,10 +61,15 @@ class TodoController {
 
   putTodo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = req.body
-      const id = this.getIDFromRequest(req)
+      await TodoService.initRepo()
 
-      const todo = await TodoService.putTodo(id, data)
+      const id = this.getIDFromRequest(req)
+      const { userID } = await TodoService.getSingle(id)
+
+      const data = { ...req.body, userID }
+
+      const todo = await TodoService.put(id, data)
+
       if (!todo) this.sendNoIdResponse(res)
 
       res.status(200).send(todo)
@@ -71,10 +80,11 @@ class TodoController {
 
   patchTodo = async (req: Request, res: Response) => {
     try {
+      await TodoService.initRepo()
       const data = req.body
       const id = this.getIDFromRequest(req)
 
-      const todo = await TodoService.patchTodo(id, data)
+      const todo = await TodoService.patch(id, data)
       if (!todo) this.sendNoIdResponse(res)
 
       res.status(200).send(todo)
@@ -85,8 +95,9 @@ class TodoController {
 
   deleteTodo = async (req: Request, res: Response) => {
     try {
+      await TodoService.initRepo()
       const id = this.getIDFromRequest(req)
-      const result = await TodoService.deleteTodo(id)
+      const result = await TodoService.delete(id)
 
       if (!result.affected) this.sendNoIdResponse(res)
 

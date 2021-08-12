@@ -6,7 +6,7 @@ import {
   OneToMany,
   BeforeUpdate,
 } from 'typeorm'
-import * as bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import { Todo } from './todo.entity'
 
 export enum UserRole {

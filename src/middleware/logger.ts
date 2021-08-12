@@ -1,3 +1,3 @@
-import * as morgan from 'morgan'
+import morgan from 'morgan'
 
 export default morgan('tiny')

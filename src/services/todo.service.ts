@@ -1,34 +1,39 @@
 import { ITodo, Todo } from '../entity/todo.entity'
-import {
-  addEntity,
-  deleteEntity,
-  getAllEntities,
-  getSingleEntity,
-  patchEntity,
-  putEntity,
-} from './base/base.service'
+import { EntityService } from './base/base.service'
 
-//Basic CRUD
-const addTodo = addEntity<ITodo, Todo>(Todo)
-const getAllTodos = getAllEntities<Todo>(Todo)
-const getSingleTodo = getSingleEntity<Todo>(Todo)
-const putTodo = putEntity<ITodo, Todo>(Todo)
-const patchTodo = patchEntity<ITodo, Todo>(Todo)
-const deleteTodo = deleteEntity<Todo>(Todo)
+class TodoService extends EntityService<ITodo, Todo> {
+  constructor() {
+    super(Todo, { isCompleted: false }) //extend basic CRUD operations
+  }
 
-//Custom
-const getAllUserTodos = async (userID: number) =>
-  getAllEntities<Todo>(Todo, { userID })()
-
-export {
-  addTodo,
-  getAllTodos,
-  getSingleTodo,
-  putTodo,
-  patchTodo,
-  deleteTodo,
-  getAllUserTodos,
+  public async getAllByUserId(userID: number): Promise<Todo[]> {
+    return await super.getAll({ userID })
+  }
 }
+export default new TodoService()
+
+//old:
+// //Basic CRUD
+// const addTodo = addEntity<ITodo, Todo>(Todo)
+// const getAllTodos = getAllEntities<Todo>(Todo)
+// const getSingleTodo = getSingleEntity<Todo>(Todo)
+// const putTodo = putEntity<ITodo, Todo>(Todo)
+// const patchTodo = patchEntity<ITodo, Todo>(Todo)
+// const deleteTodo = deleteEntity<Todo>(Todo)
+//
+// //Custom
+// const getAllUserTodos = async (userID: number) =>
+//   getAllEntities<Todo>(Todo, { userID })()
+//
+// export {
+//   addTodo,
+//   getAllTodos,
+//   getSingleTodo,
+//   putTodo,
+//   patchTodo,
+//   deleteTodo,
+//   getAllUserTodos,
+// }
 
 //old (repetitive):
 // export const addTodo = async (todo: ITodo): Promise<Todo> => {

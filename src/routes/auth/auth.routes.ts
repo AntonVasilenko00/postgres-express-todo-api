@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import AuthController from '../../controllers/auth.controller'
 import { authValidation } from '../../middleware/validation/auth.validation'
 import { validateRequest } from '../../middleware/validation/request.validation'

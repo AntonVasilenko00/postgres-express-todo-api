@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
-import * as BaseService from '../../services/base/base.service'
+import BaseService from '../../services/base/base.service'
 
 //Base: create base controller
 

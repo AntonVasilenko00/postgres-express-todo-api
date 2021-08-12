@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import * as UserService from '../services/user.service'
+import UserService from '../services/user.service'
 import { IUser, UserRole } from '../entity/user.entity'
 
 //Todo: create base controller
@@ -11,9 +11,10 @@ class UserController {
     res.status(404).send({ message: 'No item with such id' })
 
   createUser = async (req: Request, res: Response) => {
+    await UserService.initRepo()
     try {
       const data = req.body
-      const User = await UserService.addUser(data)
+      const User = await UserService.add(data)
 
       res.json(User)
     } catch (e) {
@@ -24,9 +25,10 @@ class UserController {
   }
 
   getSingleUser = async (req: Request, res: Response) => {
+    await UserService.initRepo()
     try {
       const id = this.getIdFromRequest(req)
-      const User = await UserService.getSingleUser(id)
+      const User = await UserService.getSingle(id)
 
       if (!User) this.sendNoIdResponse(res)
 
@@ -38,8 +40,9 @@ class UserController {
   }
 
   getAllUsers = async (req: Request, res: Response) => {
+    await UserService.initRepo()
     try {
-      const Users = await UserService.getAllUsers()
+      const Users = await UserService.getAll()
 
       res.json(Users)
     } catch (e) {
@@ -48,6 +51,7 @@ class UserController {
   }
 
   putUser = async (req: Request, res: Response, next: NextFunction) => {
+    await UserService.initRepo()
     try {
       const currentUser = req.user as IUser
       const data = req.body
@@ -55,7 +59,7 @@ class UserController {
         return res.status(403).send({ message: 'Access Denied' })
       const id = this.getIdFromRequest(req)
 
-      const User = await UserService.putUser(id, data)
+      const User = await UserService.put(id, data)
       if (!User) this.sendNoIdResponse(res)
 
       res.status(200).send(User)
@@ -65,6 +69,7 @@ class UserController {
   }
 
   patchUser = async (req: Request, res: Response) => {
+    await UserService.initRepo()
     try {
       const currentUser = req.user as IUser
 
@@ -75,7 +80,7 @@ class UserController {
 
       const id = this.getIdFromRequest(req)
 
-      const User = await UserService.patchUser(id, data)
+      const User = await UserService.patch(id, data)
       if (!User) this.sendNoIdResponse(res)
 
       res.status(200).send(User)
@@ -87,9 +92,10 @@ class UserController {
   }
 
   deleteUser = async (req: Request, res: Response) => {
+    await UserService.initRepo()
     try {
       const id = this.getIdFromRequest(req)
-      const result = await UserService.deleteUser(id)
+      const result = await UserService.delete(id)
 
       if (!result.affected) this.sendNoIdResponse(res)
 

@@ -1,6 +1,6 @@
 import { Strategy as LocalStrategy } from 'passport-local'
 import { Strategy as _JWTStrategy, ExtractJwt } from 'passport-jwt'
-import * as UserService from '../../services/user.service'
+import UserService from '../../services/user.service'
 
 export const SignUpStrategy = new LocalStrategy(
   {
@@ -8,8 +8,9 @@ export const SignUpStrategy = new LocalStrategy(
     passwordField: 'password',
   },
   async (email, password, done) => {
+    await UserService.initRepo()
     try {
-      const user = await UserService.addUser({ email, password })
+      const user = await UserService.add({ email, password })
 
       return done(null, user)
     } catch (error) {
@@ -21,6 +22,7 @@ export const SignUpStrategy = new LocalStrategy(
 export const LoginStrategy = new LocalStrategy(
   { usernameField: 'email', passwordField: 'password' },
   async (email, password, done) => {
+    await UserService.initRepo()
     try {
       const user = await UserService.getUserByEmail(email)
 
@@ -43,8 +45,10 @@ export const JWTStrategy = new _JWTStrategy(
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   },
   async (token, done) => {
+    await UserService.initRepo()
     try {
-      return done(null, token)
+      const user = await UserService.getSingle(token.sub)
+      return done(null, user)
     } catch (err) {
       done(err)
     }

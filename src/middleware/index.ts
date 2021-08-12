@@ -1,7 +1,7 @@
 import { Express } from 'express'
 import { jsonParser, parser } from './parser'
 import logger from './logger'
-import * as passport from 'passport'
+import passport from 'passport'
 import { LoginStrategy, SignUpStrategy, JWTStrategy } from './auth/strategies'
 
 export const applyMiddleware = (app: Express) => {

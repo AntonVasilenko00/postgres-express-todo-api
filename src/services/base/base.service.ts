@@ -1,4 +1,4 @@
-import { DeleteResult, EntityTarget, getRepository } from 'typeorm'
+import { DeleteResult, EntityTarget, getRepository, Repository } from 'typeorm'
 
 const addEntity =
   <IEntity, Entity>(entity: EntityTarget<Entity>) =>
@@ -58,4 +58,67 @@ export {
   putEntity,
   patchEntity,
   deleteEntity,
+}
+
+//REFACTORING
+export type AnyObject = Record<string, unknown>
+
+interface IEntityService<IEntity, Entity> {
+  add: (item: IEntity) => Promise<Entity>
+  getAll: (condition?: IEntity) => Promise<Entity[]>
+  getSingle: (idOrCondition: number | AnyObject) => Promise<Entity>
+  put: (id: number, item: IEntity) => Promise<Entity>
+  patch: (id: number, item: IEntity) => Promise<Entity>
+  delete: (id: number) => Promise<DeleteResult>
+}
+
+export class EntityService<IEntity, Entity>
+  implements IEntityService<IEntity, Entity>
+{
+  protected entity: EntityTarget<Entity>
+  protected repo: Repository<Entity>
+  protected defaultValues: Partial<IEntity>
+
+  constructor(
+    entity: EntityTarget<Entity>,
+    defaultValues: Partial<IEntity> = {}
+  ) {
+    this.entity = entity
+    this.defaultValues = defaultValues
+  }
+
+  public async initRepo(): Promise<void> {
+    this.repo = await getRepository(this.entity)
+  }
+
+  public async add(item: IEntity): Promise<Entity> {
+    const newItem = this.repo.create(item)
+    return this.repo.save(newItem)
+  }
+
+  public async getAll(condition?: AnyObject): Promise<Entity[]> {
+    return this.repo.find(condition ? { where: condition } : {})
+  }
+
+  public async getSingle(idOrCondition: number | AnyObject): Promise<Entity> {
+    switch (typeof idOrCondition) {
+      case 'number':
+        return this.repo.findOne(idOrCondition)
+      default:
+        return this.repo.findOne({ where: idOrCondition })
+    }
+  }
+
+  public async put(id: number, item: IEntity): Promise<Entity> {
+    return this.repo.save({ ...item, id, ...this.defaultValues })
+  }
+
+  public async patch(id: number, item: IEntity): Promise<Entity> {
+    const patchedEntity = await this.repo.findOne(id)
+    return this.repo.save(Object.assign(patchedEntity, item))
+  }
+
+  public async delete(id: number): Promise<DeleteResult> {
+    return this.repo.delete(id)
+  }
 }

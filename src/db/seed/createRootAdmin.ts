@@ -1,6 +1,6 @@
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import { UserRole, User } from '../../entity/user.entity'
-import * as UserService from '../../services/user.service'
+import UserService from '../../services/user.service'
 
 dotenv.config()
 
@@ -9,5 +9,5 @@ export const createRootAdmin = async (): Promise<User> => {
   const password = process.env.ROOT_ADMIN_PASSWORD
   const role = UserRole.Admin
 
-  return UserService.addUser({ email, password, role })
+  return UserService.add({ email, password, role })
 }

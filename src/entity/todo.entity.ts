@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   JoinTable,
+  DeleteDateColumn,
 } from 'typeorm'
 import { User } from './user.entity'
 

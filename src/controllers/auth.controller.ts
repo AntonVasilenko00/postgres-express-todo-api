@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
-import * as passport from 'passport'
-import * as jwt from 'jsonwebtoken'
+import passport from 'passport'
+import jwt from 'jsonwebtoken'
 import config from '../config/config'
 import { UserRole } from '../entity/user.entity'
+import ms from 'ms'
 
 export interface JWTPayload {
   sub: number //id
   role: UserRole
+  expiresIn?: string
 }
 
 class AuthController {
@@ -36,10 +38,20 @@ class AuthController {
         req.login(user, { session: false }, async (err) => {
           if (err) return next(err)
 
-          const payload: JWTPayload = { sub: user.id, role: user.role }
-          const token = jwt.sign(payload, config.jwt_secret)
+          const payload: JWTPayload = {
+            sub: user.id,
+            role: user.role,
+            expiresIn: config.jwt_exp,
+          }
+          const token = jwt.sign(payload, config.jwt_secret, {
+            expiresIn: config.jwt_exp,
+          })
 
-          return res.json({ id: user.id, token })
+          return res.json({
+            id: user.id,
+            token,
+            expiresIn: payload.expiresIn,
+          })
         })
       } catch (err) {
         return next(err)

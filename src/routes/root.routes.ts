@@ -1,7 +1,7 @@
-import * as express from 'express'
+import express from 'express'
 import routes from './index'
 import { validateRequest } from '../middleware/validation/request.validation'
-import * as passport from 'passport'
+import passport from 'passport'
 
 const rootRouter = express.Router()
 
